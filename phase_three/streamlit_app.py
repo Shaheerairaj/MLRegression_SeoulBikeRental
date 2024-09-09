@@ -5,6 +5,12 @@ import joblib
 from PIL import Image
 import os
 
+try:
+    import lightgbm as lgb
+except ImportError:
+    st.error("The lightgbm package is not installed. Please install it using 'pip install lightgbm' or make sure it's included in your requirements.txt file.")
+    st.stop()
+
 # Custom CSS (unchanged)
 st.markdown("""
     <style>
@@ -151,5 +157,5 @@ st.markdown("""
     **Note on Predictions:**
     The model may occasionally produce negative predictions for certain input combinations. 
     These are automatically adjusted to 0, as negative bike rentals are not possible. 
-    If you frequently see 0 predictions, it might indicate unusual or extreme input values.
-""")
+    If you frequently see 0 predictions, it might indicate unusual"""
+)

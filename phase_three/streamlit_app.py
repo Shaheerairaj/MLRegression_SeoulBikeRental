@@ -128,7 +128,7 @@ for col in categorical_features:
     if col == 'Holiday':
         options = ['No Holiday', 'Holiday']
     elif col == 'DayType':
-        options = ['Weekend/Holiday', 'Weekday']
+        options = ['Weekend', 'Weekday']
     elif col == 'Seasons':
         options = ['Spring', 'Summer', 'Autumn', 'Winter']
     else:

@@ -3,8 +3,9 @@ import pandas as pd
 import numpy as np
 import joblib
 from PIL import Image
+import os
 
-# Custom CSS with updated styles
+# Custom CSS (unchanged)
 st.markdown("""
     <style>
     .stApp {
@@ -25,7 +26,7 @@ st.markdown("""
     h1, h2, h3, h4, h5, h6, .stMarkdown {
         color: white;
     }
-    /* Specific styles for sidebar content */
+            
     .sidebar .sidebar-content {
         color: black !important;
     }
@@ -36,11 +37,11 @@ st.markdown("""
     .sidebar .sidebar-content div {
         color: black !important;
     }
-    /* Make select boxes for Season, Holiday, and DayType white */
+            
     div[data-baseweb="select"] > div {
         color: white !important;
     }
-    /* Style for prediction display */
+            
     .prediction-box {
         background-color: white;
         color: black;
@@ -55,24 +56,35 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # Load the model and related information
-model, ref_cols, target = joblib.load("/Users/secret/Desktop/Seoul_bike/MLRegression_SeoulBikeRental/phase_three/exported_model_timo.pkl")
+try:
+    model_path = os.path.join(os.path.dirname(__file__), "exported_model_timo.pkl")
+    model, ref_cols, target = joblib.load(model_path)
+except FileNotFoundError:
+    st.error("Model file not found. Please ensure 'exported_model_timo.pkl' is in the same directory as this app.")
+    st.stop()
+except Exception as e:
+    st.error(f"An error occurred while loading the model: {str(e)}")
+    st.stop()
 
 # Load and display the logo in the sidebar
-logo = Image.open("bike_icon.png")
-st.sidebar.image(logo, width=200)  # Adjust width as needed
+try:
+    logo_path = os.path.join(os.path.dirname(__file__), "bike_icon.png")
+    logo = Image.open(logo_path)
+    st.sidebar.image(logo, width=200)
+except FileNotFoundError:
+    st.sidebar.warning("Logo file not found. Continuing without logo.")
+except Exception as e:
+    st.sidebar.warning(f"An error occurred while loading the logo: {str(e)}")
 
-# Explicitly set color for About this application
+# Sidebar content
 st.sidebar.markdown('<h3 style="color: black;">About this application</h3>', unsafe_allow_html=True)
 st.sidebar.markdown('<p style="color: black;">This app uses a LightGBM model to predict the number of rented bikes in Seoul based on the features listed below</p>', unsafe_allow_html=True)
-
-# Explicitly set color for Features section
 st.sidebar.markdown('<h3 style="color: black;">Features</h3>', unsafe_allow_html=True)
 
 # Separate numeric and categorical features
 numeric_features = model.named_steps['preprocessor'].transformers_[0][2]
 categorical_features = model.named_steps['preprocessor'].transformers_[1][2]
 
-# Explicitly set color for feature lists
 st.sidebar.markdown('<p style="color: black;"><strong>Numeric features:</strong> Hour, Temperature(°C), Humidity(%), Wind speed (m/s), Visibility (10m), Solar Radiation (MJ/m2), Rainfall(mm), Snowfall (cm)</p>', unsafe_allow_html=True)
 st.sidebar.markdown('<p style="color: black;"><strong>Categorical features:</strong> Seasons, Holiday, DayType</p>', unsafe_allow_html=True)
 
@@ -96,7 +108,7 @@ slider_ranges = {
 }
 
 for col in numeric_features:
-    min_val, max_val, step = slider_ranges.get(col, (0.0, 100.0, 1.0))  # Default range if not specified
+    min_val, max_val, step = slider_ranges.get(col, (0.0, 100.0, 1.0))
     if isinstance(min_val, int) and isinstance(max_val, int) and isinstance(step, int):
         value = int(min_val)
     else:
@@ -110,11 +122,10 @@ for col in categorical_features:
     if col == 'Holiday':
         options = ['No Holiday', 'Holiday']
     elif col == 'DayType':
-        options = ['Weekend', 'Weekday']
+        options = ['Weekend/Holiday', 'Weekday']
     elif col == 'Seasons':
         options = ['Spring', 'Summer', 'Autumn', 'Winter']
     else:
-        # Get the categories from the OneHotEncoder for any other categorical features
         cat_index = list(categorical_features).index(col)
         options = model.named_steps['preprocessor'].named_transformers_['cat'].named_steps['onehot'].categories_[cat_index]
     
@@ -122,27 +133,20 @@ for col in categorical_features:
 
 # Create a prediction button
 if st.button("Predict Rented Bike Count"):
-    # Convert input data to DataFrame
     input_df = pd.DataFrame([input_data])
     
-    # Ensure the input DataFrame has the correct dtypes
     for col in categorical_features:
         input_df[col] = input_df[col].astype('category')
     
-    # Make prediction
     prediction = model.predict(input_df)[0]
-    
-    # Ensure prediction is non-negative
     prediction = max(0, prediction)
     
-    # Display the prediction
     st.markdown(f"""
     <div class="prediction-box">
         <span class="prediction-label">Predicted {target}:</span> {prediction:.2f}
     </div>
     """, unsafe_allow_html=True)
 
-# Add explanation about negative predictions
 st.markdown("""
     **Note on Predictions:**
     The model may occasionally produce negative predictions for certain input combinations. 

@@ -25,13 +25,15 @@ st.markdown("""
     h1, h2, h3, h4, h5, h6, .stMarkdown {
         color: white;
     }
+    /* Specific styles for sidebar content */
     .sidebar .sidebar-content {
-        color: white;
+        color: black !important;
     }
     .sidebar .sidebar-content h1,
     .sidebar .sidebar-content h2,
     .sidebar .sidebar-content h3,
-    .sidebar .sidebar-content p {
+    .sidebar .sidebar-content p,
+    .sidebar .sidebar-content div {
         color: black !important;
     }
     /* Make select boxes for Season, Holiday, and DayType white */
@@ -59,16 +61,20 @@ model, ref_cols, target = joblib.load("/Users/secret/Desktop/Seoul_bike/MLRegres
 logo = Image.open("bike_icon.png")
 st.sidebar.image(logo, width=200)  # Adjust width as needed
 
-st.sidebar.header("About this application")
-st.sidebar.info("This app uses a LightGBM model to predict the number of rented bikes in Seoul based on the features listed below")
-st.sidebar.header("Features")
+# Explicitly set color for About this application
+st.sidebar.markdown('<h3 style="color: black;">About this application</h3>', unsafe_allow_html=True)
+st.sidebar.markdown('<p style="color: black;">This app uses a LightGBM model to predict the number of rented bikes in Seoul based on the features listed below</p>', unsafe_allow_html=True)
+
+# Explicitly set color for Features section
+st.sidebar.markdown('<h3 style="color: black;">Features</h3>', unsafe_allow_html=True)
 
 # Separate numeric and categorical features
 numeric_features = model.named_steps['preprocessor'].transformers_[0][2]
 categorical_features = model.named_steps['preprocessor'].transformers_[1][2]
 
-st.sidebar.markdown("**Numeric features:** Hour, Temperature(°C), Humidity(%), Wind speed (m/s), Visibility (10m), Solar Radiation (MJ/m2), Rainfall(mm), Snowfall (cm)")
-st.sidebar.markdown("**Categorical features:** Seasons, Holiday, DayType")
+# Explicitly set color for feature lists
+st.sidebar.markdown('<p style="color: black;"><strong>Numeric features:</strong> Hour, Temperature(°C), Humidity(%), Wind speed (m/s), Visibility (10m), Solar Radiation (MJ/m2), Rainfall(mm), Snowfall (cm)</p>', unsafe_allow_html=True)
+st.sidebar.markdown('<p style="color: black;"><strong>Categorical features:</strong> Seasons, Holiday, DayType</p>', unsafe_allow_html=True)
 
 # Main content
 st.title("Bike Rental Predictor")

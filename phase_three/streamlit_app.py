@@ -11,7 +11,7 @@ except ImportError:
     st.error("The lightgbm package is not installed. Please install it using 'pip install lightgbm' or make sure it's included in your requirements.txt file.")
     st.stop()
 
-# Custom CSS (unchanged)
+
 st.markdown("""
     <style>
     .stApp {
@@ -61,7 +61,8 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# Load the model and related information
+
+
 try:
     model_path = os.path.join(os.path.dirname(__file__), "exported_model_timo.pkl")
     model, ref_cols, target = joblib.load(model_path)
@@ -82,19 +83,22 @@ except FileNotFoundError:
 except Exception as e:
     st.sidebar.warning(f"An error occurred while loading the logo: {str(e)}")
 
+
 # Sidebar content
 st.sidebar.markdown('<h3 style="color: black;">About this application</h3>', unsafe_allow_html=True)
 st.sidebar.markdown('<p style="color: black;">This app uses a LightGBM model to predict the number of rented bikes in Seoul based on the features listed below</p>', unsafe_allow_html=True)
 st.sidebar.markdown('<h3 style="color: black;">Features</h3>', unsafe_allow_html=True)
 
-# Separate numeric and categorical features
+
+
 numeric_features = model.named_steps['preprocessor'].transformers_[0][2]
 categorical_features = model.named_steps['preprocessor'].transformers_[1][2]
 
 st.sidebar.markdown('<p style="color: black;"><strong>Numeric features:</strong> Hour, Temperature(°C), Humidity(%), Wind speed (m/s), Visibility (10m), Solar Radiation (MJ/m2), Rainfall(mm), Snowfall (cm)</p>', unsafe_allow_html=True)
 st.sidebar.markdown('<p style="color: black;"><strong>Categorical features:</strong> Seasons, Holiday, DayType</p>', unsafe_allow_html=True)
 
-# Main content
+
+# Main section
 st.title("Bike Rental Predictor")
 
 # Create input fields for each feature
@@ -122,6 +126,7 @@ for col in numeric_features:
         value = float(min_val)
     input_data[col] = st.slider(f"Select {col}", min_value=min_val, max_value=max_val, value=value, step=step)
 
+
 # Create input fields for categorical features
 st.subheader("Categorical Features")
 for col in categorical_features:
@@ -136,6 +141,7 @@ for col in categorical_features:
         options = model.named_steps['preprocessor'].named_transformers_['cat'].named_steps['onehot'].categories_[cat_index]
     
     input_data[col] = st.selectbox(f"Select {col}", options=options)
+
 
 # Create a prediction button
 if st.button("Predict Rented Bike Count"):

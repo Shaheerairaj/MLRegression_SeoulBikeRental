@@ -72,7 +72,7 @@ def preprocess_data(data):
 #Load the trained model
 @st.cache_resource
 def load_model():
-    model = joblib.load('Model_pipeline_Mari.pkl')
+    model = joblib.load('./Model_pipeline_Mari.pkl')
     return model
 
 #Create column layouts

@@ -1,3 +1,7 @@
-python3-distutils
 build-essential
+python3-distutils
 python3-dev
+zlib1g-dev
+gfortran
+libopenblas-dev
+liblapack-dev

@@ -1,7 +1,7 @@
 pip>=24.2
 setuptools>=65.5.0
 wheel>=0.40.0  # Add this to ensure builds happen correctly
-streamlit==1.24.0
+streamlit==1.38.0
 pandas==1.5.3
 numpy==1.22.4
 joblib==1.2.0

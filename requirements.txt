@@ -4,4 +4,6 @@ pandas
 numpy
 joblib
 scikit-learn
+lightgbm
+xgboost
 Pillow

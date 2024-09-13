@@ -1,10 +1,11 @@
+pip>=24.2
 setuptools>=65.5.0
+wheel>=0.40.0  # Add this to ensure builds happen correctly
 streamlit==1.24.0
 pandas==1.5.3
-numpy==1.23.5  # Downgrade to a more stable version
+numpy==1.23.5
 joblib==1.2.0
 Pillow==9.5.0
 scikit-learn==1.2.2
 lightgbm==3.3.5
-pip>=24.2
-xgboost==1.7.5  # Added xgboost
+xgboost==1.7.5

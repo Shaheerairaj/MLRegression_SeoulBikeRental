@@ -1,2 +1,7 @@
-streamlit==1.38.0
-Pillow==9.5.0
+setuptools
+streamlit
+pandas
+numpy
+joblib
+scikit-learn
+Pillow

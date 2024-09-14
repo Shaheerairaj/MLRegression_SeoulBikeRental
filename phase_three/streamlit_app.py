@@ -154,7 +154,7 @@ numeric_features = model.named_steps['preprocessor'].transformers_[0][2]
 categorical_features = model.named_steps['preprocessor'].transformers_[1][2]
 
 # Main section
-st.title("Bike Rental Predictor")
+st.title("Bike Rental Predictor: Seoul🇰🇷")
 
 # Add the dataset information box
 st.markdown("""
@@ -179,7 +179,7 @@ st.markdown("""
 input_data = {}
 
 # Create sliders for numeric features with appropriate ranges
-st.subheader("Numeric Features")
+st.subheader("NUMERIC FEATURES ⏲")
 slider_ranges = {
     'Hour': (0, 23, 1),
     'Temperature(°C)': (-20.0, 40.0, 0.1),
@@ -201,7 +201,7 @@ for col in numeric_features:
     input_data[col] = st.slider(f"Select {col}", min_value=min_val, max_value=max_val, value=value, step=step)
 
 # Create input fields for categorical features
-st.subheader("Categorical Features")
+st.subheader("CATEGORICAL FEATURES 📒")
 for col in categorical_features:
     if col == 'Holiday':
         options = ['No Holiday', 'Holiday']

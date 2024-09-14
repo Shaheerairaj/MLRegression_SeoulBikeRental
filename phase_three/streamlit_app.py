@@ -58,8 +58,10 @@ st.markdown("""
         font-weight: bold;
     }
     .about-box {
-        border: 1px solid black;
-        padding: 10px;
+        background-color: white;
+        color: black;
+        padding: 15px;
+        border-radius: 10px;
         margin-bottom: 20px;
     }
     .stApp header {
@@ -88,6 +90,10 @@ st.markdown("""
     .categorical-container {
         margin-bottom: 10px;
     }
+    [data-testid="stSidebar"] [data-testid="stImage"] {
+        border-radius: 10px;
+        overflow: hidden;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -101,15 +107,15 @@ except Exception as e:
     st.error(f"An error occurred while loading the model: {str(e)}")
     st.stop()
 
-# Load and display the logo in the sidebar
+# Load and display the new image in the sidebar with rounded edges
 try:
-    logo_path = os.path.join(os.path.dirname(__file__), "bike_icon.png")
-    logo = Image.open(logo_path)
-    st.sidebar.image(logo, width=200)
+    image_path = os.path.join(os.path.dirname(__file__), "bike_rental_seoul.jpg")
+    image = Image.open(image_path)
+    st.sidebar.image(image, use_column_width=True)
 except FileNotFoundError:
-    st.sidebar.warning("Logo file not found. Continuing without logo.")
+    st.sidebar.warning("Image file 'bike_rental_seoul.jpg' not found. Continuing without image.")
 except Exception as e:
-    st.sidebar.warning(f"An error occurred while loading the logo: {str(e)}")
+    st.sidebar.warning(f"An error occurred while loading the image: {str(e)}")
 
 # Sidebar content
 st.sidebar.markdown("""
@@ -148,7 +154,7 @@ numeric_features = model.named_steps['preprocessor'].transformers_[0][2]
 categorical_features = model.named_steps['preprocessor'].transformers_[1][2]
 
 # Main section
-st.title("Bike Rental Predictor: Seoul 🇰🇷")
+st.title("Bike Rental Predictor")
 
 # Add the dataset information box
 st.markdown("""
@@ -173,7 +179,7 @@ st.markdown("""
 input_data = {}
 
 # Create sliders for numeric features with appropriate ranges
-st.subheader("NUMERIC FEATURES ⏲")
+st.subheader("Numeric Features")
 slider_ranges = {
     'Hour': (0, 23, 1),
     'Temperature(°C)': (-20.0, 40.0, 0.1),
@@ -195,7 +201,7 @@ for col in numeric_features:
     input_data[col] = st.slider(f"Select {col}", min_value=min_val, max_value=max_val, value=value, step=step)
 
 # Create input fields for categorical features
-st.subheader("CATEGORICAL FEATURES 📕")
+st.subheader("Categorical Features")
 for col in categorical_features:
     if col == 'Holiday':
         options = ['No Holiday', 'Holiday']
